@@ -14,7 +14,7 @@ export default {
       model: gateway("openai/gpt-6-luna-fast"),
       system: "You are a thorough QA agent. Verify every outcome.",
       context:
-        "The page is the e2e Store's support chat. Replies come from a live language model, so their wording changes between runs: judge what a reply means, not its words.",
+        "The page is the e2e Store's support chat. Replies come from a live language model, so their wording changes between runs: judge what a reply means, not its words. While the assistant answers, an 'Answering…' line shows and Send is disabled.",
     },
   },
   targets: [
