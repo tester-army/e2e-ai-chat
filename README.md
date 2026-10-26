@@ -21,7 +21,7 @@ The chat's model and the e2e agent both go through the Vercel AI Gateway. Create
 
 Or link a Vercel project and run `vercel env pull .env.local`, which writes a `VERCEL_OIDC_TOKEN` that lasts 12 hours.
 
-The AI Gateway charges the providers' list prices. Its free monthly credit covers only [some models](https://vercel.com/ai-gateway/models?freeTier=true), not the ones this example uses.
+The chat runs on `reflection/beam-free`, a free model, so trying it costs nothing. The e2e agent's model isn't free: the AI Gateway charges the provider's list price, and its free monthly credit covers only [some models](https://vercel.com/ai-gateway/models?freeTier=true).
 
 ## End-to-end tests
 
