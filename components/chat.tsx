@@ -44,7 +44,7 @@ export function Chat({ model }: { model: string }) {
         </div>
       ) : (
         // column-reverse keeps the view at the newest message while a reply streams in.
-        <div className="flex flex-1 flex-col-reverse overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem)]">
+        <div className="flex flex-1 [scrollbar-gutter:stable_both-edges] flex-col-reverse overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem,black_calc(100%-1.5rem),transparent)]">
           <div className="mx-auto flex w-full max-w-180 flex-col gap-6 px-6 py-8">
             <ol aria-label="Conversation" className="flex flex-col gap-6">
               {messages.map((message) => (
@@ -69,33 +69,36 @@ export function Chat({ model }: { model: string }) {
         </div>
       )}
 
-      <form onSubmit={onSubmit} className="mx-auto w-full max-w-180 px-6">
-        <div className="flex items-center gap-2 border border-e2e-field-stroke bg-e2e-field-fill py-2 pr-2 pl-4 transition-[border-color,background-color] duration-200 focus-within:border-e2e-button-stroke focus-within:bg-e2e-panel-raised hover:border-e2e-white-50 motion-reduce:transition-none">
-          <input
-            ref={inputRef}
-            aria-label="Message"
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            // A message typed before React hydrates would be lost.
-            readOnly={!hydrated}
-            // After an error, Retry sends the question again.
-            disabled={error != null}
-            placeholder="Ask the store a question"
-            autoComplete="off"
-            className="h-10 min-w-0 flex-1 bg-transparent type-body text-e2e-text-bright caret-e2e-caret placeholder:text-e2e-text-faint focus:outline-none disabled:opacity-40"
-          />
-          <button
-            type="submit"
-            aria-label="Send"
-            disabled={!input.trim() || answering || error != null}
-            className="grid size-10 shrink-0 place-items-center bg-e2e-button-fill-solid text-e2e-text-on-light transition-colors hover:bg-e2e-paper-0 focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-e2e-button-stroke disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
-          >
-            <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor">
-              <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" strokeWidth="1.5" strokeLinecap="square" />
-            </svg>
-          </button>
-        </div>
-      </form>
+      {/* The same gutters as the conversation, so both center on one line whether or not a scrollbar shows. */}
+      <div className="shrink-0 [scrollbar-gutter:stable_both-edges] overflow-hidden">
+        <form onSubmit={onSubmit} className="mx-auto w-full max-w-180 px-6">
+          <div className="flex items-center gap-2 border border-e2e-field-stroke bg-e2e-field-fill py-2 pr-2 pl-4 transition-[border-color,background-color] duration-200 focus-within:border-e2e-button-stroke focus-within:bg-e2e-panel-raised hover:border-e2e-white-50 motion-reduce:transition-none">
+            <input
+              ref={inputRef}
+              aria-label="Message"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              // A message typed before React hydrates would be lost.
+              readOnly={!hydrated}
+              // After an error, Retry sends the question again.
+              disabled={error != null}
+              placeholder="Ask the store a question"
+              autoComplete="off"
+              className="h-10 min-w-0 flex-1 bg-transparent type-body text-e2e-text-bright caret-e2e-caret placeholder:text-e2e-text-faint focus:outline-none disabled:opacity-40"
+            />
+            <button
+              type="submit"
+              aria-label="Send"
+              disabled={!input.trim() || answering || error != null}
+              className="grid size-10 shrink-0 place-items-center bg-e2e-button-fill-solid text-e2e-text-on-light transition-colors hover:bg-e2e-paper-0 focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-e2e-button-stroke disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
+            >
+              <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor">
+                <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" strokeWidth="1.5" strokeLinecap="square" />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
 
       {empty ? (
         <ul
