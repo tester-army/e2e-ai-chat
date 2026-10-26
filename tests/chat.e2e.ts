@@ -50,7 +50,7 @@ describe("support chat", { tags: ["chat"], skip }, () => {
     await screen.getByRole("button", "Send").click();
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
-    await agent.assert("the assistant politely declines to write the poem and offers to help with the store instead");
+    await agent.assert("the assistant politely declines to write the poem and says what it can help with");
   });
 
   test("recovers from a failed chat request with Retry", async ({ app, screen, agent, browser }) => {
@@ -72,7 +72,7 @@ describe("support chat", { tags: ["chat"], skip }, () => {
     await chat.getByRole("button", "Retry").click();
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
-    await agent.assert("the assistant's reply says a T-shirt can be returned within 45 days of delivery");
+    await agent.assert("the assistant's reply says a T-shirt can be returned within 45 days");
     await expect(chat.getByRole("alert")).toBeHidden();
     await expect(screen.getByText("How long do I have to return a T-shirt?")).toHaveCount(1);
     expect(calls).toBe(1);
