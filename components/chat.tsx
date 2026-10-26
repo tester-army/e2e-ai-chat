@@ -4,6 +4,7 @@ import { useChat } from "@ai-sdk/react";
 import Image from "next/image";
 import { useRef, useState, useSyncExternalStore, type SubmitEvent } from "react";
 
+import { OrderCard } from "@/components/order-card";
 import { OutlineButton } from "@/components/ui/outline-button";
 import type { ChatMessage } from "@/lib/assistant";
 
@@ -123,9 +124,8 @@ export function Chat({ model }: { model: string }) {
 }
 
 function Message({ message }: { message: ChatMessage }) {
-  const text = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("");
-
   if (message.role === "user") {
+    const text = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("");
     return (
       <li className="flex justify-end">
         <span className="sr-only">You: </span>
@@ -146,9 +146,19 @@ function Message({ message }: { message: ChatMessage }) {
         sizes="32px"
         className="size-8 shrink-0 border border-e2e-hairline-strong bg-e2e-panel object-contain p-1"
       />
-      <div className="min-w-0 pt-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 pt-1">
         <p className="type-label-xs text-e2e-text-faint">Assistant</p>
-        {text && <p className="mt-1.5 type-body whitespace-pre-wrap text-e2e-text-soft">{text}</p>}
+        {message.parts.map((part, index) => {
+          if (part.type === "text" && part.text) {
+            return (
+              <p key={index} className="type-body whitespace-pre-wrap text-e2e-text-soft">
+                {part.text}
+              </p>
+            );
+          }
+          if (part.type === "tool-lookUpOrder") return <OrderCard key={part.toolCallId} part={part} />;
+          return null;
+        })}
       </div>
     </li>
   );
