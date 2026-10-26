@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# e2e-ai-chat
 
-## Getting Started
+A support chat that answers with a real model through the AI SDK and the Vercel AI Gateway, used as an example of end-to-end testing AI answers with [e2e](https://www.npmjs.com/package/e2e).
 
-First, run the development server:
+## How it works
+
+The e2e Store's support assistant answers questions about shipping, returns, and sizes, and looks up orders with a tool. Its replies stream from a real model, so their words change from run to run: the tests judge what a reply means instead of matching its text.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### AI Gateway key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The chat's model and the e2e agent both go through the Vercel AI Gateway. Create a key under [AI Gateway → API keys](https://vercel.com/d?to=%2F%5Bteam%5D%2F%7E%2Fai-gateway%2Fapi-keys&title=AI+Gateway+API+Keys) in the Vercel dashboard, copy `.env.example` to `.env.local`, and set `AI_GATEWAY_API_KEY`.
 
-## Learn More
+Or link a Vercel project and run `vercel env pull .env.local`, which writes a `VERCEL_OIDC_TOKEN` that lasts 12 hours.
 
-To learn more about Next.js, take a look at the following resources:
+The AI Gateway charges the providers' list prices. Its free monthly credit covers only [some models](https://vercel.com/ai-gateway/models?freeTier=true), not the ones this example uses.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## End-to-end tests
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`tests/home.e2e.ts` checks the page with exact locators and needs no key. With the dev server running:
 
-## Deploy on Vercel
+```bash
+npm run test:e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+To test a different URL, set `APP_URL`. Configuration lives in `e2e.config.ts`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts
+
+| Command            | Description          |
+| ------------------ | -------------------- |
+| `npm run dev`      | Start the dev server |
+| `npm run build`    | Build for production |
+| `npm run lint`     | Run ESLint           |
+| `npm run format`   | Format with Prettier |
+| `npm run test:e2e` | Run the e2e tests    |
