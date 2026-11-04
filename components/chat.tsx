@@ -107,7 +107,7 @@ export function Chat({ model }: { model: string }) {
                 onClick={() => ask(suggestion)}
                 // A tap before React hydrates would do nothing.
                 disabled={!hydrated}
-                className="flex min-h-e2e-5 cursor-pointer items-center border border-e2e-neutral-700 px-e2e-2 py-e2e-1 type-body-s text-e2e-neutral-300 outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-e2e-green disabled:cursor-not-allowed"
+                className="flex min-h-e2e-5 cursor-pointer items-center border border-e2e-neutral-700 px-e2e-2 py-e2e-1 type-body-s text-e2e-neutral-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-e2e-green disabled:cursor-not-allowed"
               >
                 {suggestion}
               </button>
