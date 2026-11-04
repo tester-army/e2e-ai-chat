@@ -8,7 +8,7 @@ A support chat that answers with a real model through the AI SDK and the Vercel 
 
 The e2e Store's support assistant answers questions about shipping, returns, and sizes, and looks up orders with a tool:
 
-- **Chat** (`components/chat.tsx`) sends the conversation with the AI SDK's `useChat` and streams the reply in. When a request fails, it shows an error and a Retry button.
+- **Chat** (`components/chat.tsx`) sends the conversation with the AI SDK's `useChat` and streams the reply in. When a request fails, it shows an error and a retry button.
 - **`POST /api/chat`** (`app/api/chat/route.ts`) calls `reflection/beam-free`, a free model, through the Vercel AI Gateway, with the store's policy and a `lookUpOrder` tool (`lib/assistant.ts`).
 - **Order card** (`components/order-card.tsx`) shows what the tool found in a fixed list of orders (`lib/orders.ts`).
 
@@ -25,10 +25,10 @@ There is no database and no history: the conversation lives in the page until yo
 
 | Order         | Status                            |
 | ------------- | --------------------------------- |
-| `E2E-1001`    | Delivered                         |
-| `E2E-1002`    | Shipped, UPS `1Z999AA10123456784` |
-| `E2E-1003`    | Processing                        |
-| Anything else | Not found                         |
+| `E2E-1001`    | delivered                         |
+| `E2E-1002`    | shipped, UPS `1Z999AA10123456784` |
+| `E2E-1003`    | processing                        |
+| Anything else | not found                         |
 
 ## Getting started
 
@@ -49,7 +49,7 @@ The chat runs on `reflection/beam-free`, a free model, so trying it costs nothin
 
 ## End-to-end tests
 
-The tests in `tests/chat.e2e.ts` ask the real model four things: a shipping question, an order (answered with the tool's card), an off-topic request, and a question whose request fails with a 500 until Retry. Exact locators type and click on our page and check what is fixed: the order card's data and the error message. `agent.waitFor` waits until a reply has streamed in, and `agent.assert` judges what it says. Two tests also ask the AI Gateway's API which model answered and whether a step called the tool. `tests/home.e2e.ts` checks the empty page with locators only and needs no key.
+The tests in `tests/chat.e2e.ts` ask the real model four things: a shipping question, an order (answered with the tool's card), an off-topic request, and a question whose request fails with a 500 until retry. Exact locators type and click on our page and check what is fixed: the order card's data and the error message. `agent.waitFor` waits until a reply has streamed in, and `agent.assert` judges what it says. Two tests also ask the AI Gateway's API which model answered and whether a step called the tool. `tests/home.e2e.ts` checks the empty page with locators only and needs no key.
 
 A full run takes about 50 seconds and costs about $0.003 in agent model calls. With the dev server running:
 

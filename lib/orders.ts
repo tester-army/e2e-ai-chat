@@ -1,6 +1,6 @@
 // A fixed list instead of a database: the card shows these values exactly, so a test can check them.
 export type Order = {
-  status: "Delivered" | "Shipped" | "Processing";
+  status: "delivered" | "shipped" | "processing";
   item: string;
   deliveredOn?: string;
   carrier?: string;
@@ -9,9 +9,9 @@ export type Order = {
 };
 
 const ORDERS: Record<string, Order> = {
-  "E2E-1001": { status: "Delivered", item: "e2e T-shirt, size M", deliveredOn: "October 20, 2026" },
-  "E2E-1002": { status: "Shipped", item: "2 × e2e T-shirt, size L", carrier: "UPS", tracking: "1Z999AA10123456784" },
-  "E2E-1003": { status: "Processing", item: "e2e T-shirt, size S", shipsWithin: "2 business days" },
+  "E2E-1001": { status: "delivered", item: "e2e t-shirt, size M", deliveredOn: "october 20, 2026" },
+  "E2E-1002": { status: "shipped", item: "2 × e2e t-shirt, size L", carrier: "UPS", tracking: "1Z999AA10123456784" },
+  "E2E-1003": { status: "processing", item: "e2e t-shirt, size S", shipsWithin: "2 business days" },
 };
 
 export function findOrder(orderNumber: string) {

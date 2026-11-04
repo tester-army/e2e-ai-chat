@@ -1,14 +1,14 @@
 "use client";
 
 import { useChat } from "@ai-sdk/react";
-import Image from "next/image";
 import { useRef, useState, useSyncExternalStore, type SubmitEvent } from "react";
 
 import { OrderCard } from "@/components/order-card";
-import { OutlineButton } from "@/components/ui/outline-button";
+import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/ui/logo";
 import type { ChatMessage } from "@/lib/assistant";
 
-const SUGGESTIONS = ["Do I get free shipping on two T-shirts?", "Where is order E2E-1002?", "How do returns work?"];
+const SUGGESTIONS = ["do i get free shipping on two t-shirts?", "where is order E2E-1002?", "how do returns work?"];
 
 export function Chat({ model }: { model: string }) {
   const { messages, sendMessage, regenerate, status, error } = useChat<ChatMessage>();
@@ -34,35 +34,37 @@ export function Chat({ model }: { model: string }) {
   return (
     <main className="flex min-h-0 flex-1 flex-col">
       {empty ? (
-        <div className="mx-auto mt-auto w-full max-w-180 px-6 pb-8 text-center">
-          <p className="type-eyebrow text-e2e-text-faint">e2e Store support</p>
-          <h1 className="mt-3 type-h2 text-e2e-text-primary">How can we help?</h1>
-          <p className="mx-auto mt-4 max-w-120 type-body text-e2e-text-secondary">
-            A support chat on a real model, tested end to end with e2e: each reply is judged for what it means, not its
+        <div className="mx-auto mt-auto w-full max-w-180 px-e2e-3 pb-e2e-5 text-center">
+          <p className="type-caption text-e2e-mint">e2e store support</p>
+          <h1 className="mt-e2e-2 type-h2 text-e2e-off-white">how can we help?</h1>
+          <p className="mx-auto mt-e2e-3 max-w-120 type-body-l text-e2e-neutral-400">
+            a support chat on a real model, tested end to end with e2e: each reply is judged for what it means, not its
             exact words.
           </p>
         </div>
       ) : (
         // column-reverse keeps the view at the newest message while a reply streams in.
-        <div className="flex flex-1 [scrollbar-gutter:stable_both-edges] flex-col-reverse overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2rem,black_calc(100%-1.5rem),transparent)]">
-          <div className="mx-auto flex w-full max-w-180 flex-col gap-6 px-6 py-8">
-            <ol aria-label="Conversation" className="flex flex-col gap-6">
+        <div className="flex flex-1 [scrollbar-gutter:stable_both-edges] flex-col-reverse overflow-y-auto">
+          <div className="mx-auto flex w-full max-w-180 flex-col gap-e2e-4 px-e2e-3 py-e2e-5">
+            <ol aria-label="conversation" className="flex flex-col gap-e2e-4">
               {messages.map((message) => (
                 <Message key={message.id} message={message} />
               ))}
             </ol>
             {answering && (
-              <p role="status" className="flex items-center gap-2 pl-11 type-code-s text-e2e-text-faint">
-                <span aria-hidden="true" className="size-1.5 bg-e2e-text-faint motion-safe:animate-pulse" />
-                Answering…
+              <p role="status" className="flex items-center gap-e2e-1 pl-e2e-6 type-caption text-e2e-neutral-500">
+                <span aria-hidden="true" className="size-1.5 bg-e2e-green motion-safe:animate-pulse" />
+                answering…
               </p>
             )}
             {error && (
-              <div className="ml-11 grid grid-cols-[minmax(0,1fr)_96px] items-center gap-3 border border-e2e-accent px-4 py-3">
-                <p role="alert" className="type-code-s text-e2e-accent">
-                  Something went wrong. The assistant didn&apos;t answer.
+              <div className="flex items-center justify-between gap-e2e-2 border border-e2e-mint py-e2e-1 pr-e2e-1 pl-e2e-2 sm:ml-e2e-6">
+                <p role="alert" className="type-body-s text-e2e-mint">
+                  something went wrong. the assistant didn&apos;t answer.
                 </p>
-                <OutlineButton onClick={() => regenerate()}>Retry</OutlineButton>
+                <Button variant="outline" className="shrink-0" onClick={() => regenerate()}>
+                  retry
+                </Button>
               </div>
             )}
           </div>
@@ -71,39 +73,32 @@ export function Chat({ model }: { model: string }) {
 
       {/* The same gutters as the conversation, so both center on one line whether or not a scrollbar shows. */}
       <div className="shrink-0 [scrollbar-gutter:stable_both-edges] overflow-hidden">
-        <form onSubmit={onSubmit} className="mx-auto w-full max-w-180 px-6">
-          <div className="flex items-center gap-2 border border-e2e-field-stroke bg-e2e-field-fill py-2 pr-2 pl-4 transition-[border-color,background-color] duration-200 focus-within:border-e2e-button-stroke focus-within:bg-e2e-panel-raised hover:border-e2e-white-50 motion-reduce:transition-none">
+        <form onSubmit={onSubmit} className="mx-auto w-full max-w-180 px-e2e-3">
+          <div className="flex items-center gap-e2e-1 bg-e2e-neutral-800 p-e2e-1 pl-e2e-2 focus-within:outline-2 focus-within:outline-e2e-green">
             <input
               ref={inputRef}
-              aria-label="Message"
+              aria-label="message"
               value={input}
               onChange={(event) => setInput(event.target.value)}
               // A message typed before React hydrates would be lost.
               readOnly={!hydrated}
-              // After an error, Retry sends the question again.
+              // After an error, retry sends the question again.
               disabled={error != null}
-              placeholder="Ask the store a question"
+              placeholder="ask the store a question"
               autoComplete="off"
-              className="h-10 min-w-0 flex-1 bg-transparent type-body text-e2e-text-bright caret-e2e-caret placeholder:text-e2e-text-faint focus:outline-none disabled:opacity-40"
+              className="h-e2e-6 min-w-0 flex-1 bg-transparent type-body-m text-e2e-off-white caret-e2e-green outline-none placeholder:text-e2e-neutral-500 disabled:cursor-not-allowed disabled:opacity-50"
             />
-            <button
-              type="submit"
-              aria-label="Send"
-              disabled={!input.trim() || answering || error != null}
-              className="grid size-10 shrink-0 place-items-center bg-e2e-button-fill-solid text-e2e-text-on-light transition-colors hover:bg-e2e-paper-0 focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-e2e-button-stroke disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
-            >
-              <svg aria-hidden="true" viewBox="0 0 16 16" className="size-4" fill="none" stroke="currentColor">
-                <path d="M8 13V3M3.5 7.5 8 3l4.5 4.5" strokeWidth="1.5" strokeLinecap="square" />
-              </svg>
-            </button>
+            <Button type="submit" disabled={!input.trim() || answering || error != null} className="shrink-0">
+              send
+            </Button>
           </div>
         </form>
       </div>
 
       {empty ? (
         <ul
-          aria-label="Suggestions"
-          className="mx-auto mb-auto flex w-full max-w-180 flex-wrap justify-center gap-2.5 px-6 pt-4"
+          aria-label="suggestions"
+          className="mx-auto mb-auto flex w-full max-w-180 flex-wrap justify-center gap-e2e-1 px-e2e-3 pt-e2e-2"
         >
           {SUGGESTIONS.map((suggestion) => (
             <li key={suggestion}>
@@ -112,7 +107,7 @@ export function Chat({ model }: { model: string }) {
                 onClick={() => ask(suggestion)}
                 // A tap before React hydrates would do nothing.
                 disabled={!hydrated}
-                className="flex h-10 items-center bg-e2e-chip-fill px-4 type-chip text-e2e-white-70 inset-ring-[0.5px] inset-ring-e2e-chip-stroke transition-[color,box-shadow] hover:text-e2e-white-90 hover:inset-ring-e2e-white-50 focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-e2e-white-60 motion-reduce:transition-none"
+                className="flex min-h-e2e-5 cursor-pointer items-center border border-e2e-neutral-700 px-e2e-2 py-e2e-1 type-body-s text-e2e-neutral-300 outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-e2e-green disabled:cursor-not-allowed"
               >
                 {suggestion}
               </button>
@@ -121,7 +116,9 @@ export function Chat({ model }: { model: string }) {
         </ul>
       ) : null}
 
-      <p className="px-6 pt-3 pb-5 text-center type-code-s text-e2e-text-faint">{model} · Vercel AI Gateway</p>
+      <p className="px-e2e-3 pt-e2e-2 pb-e2e-3 text-center type-code-s text-e2e-neutral-500">
+        {model} · Vercel AI Gateway
+      </p>
     </main>
   );
 }
@@ -131,8 +128,8 @@ function Message({ message }: { message: ChatMessage }) {
     const text = message.parts.map((part) => (part.type === "text" ? part.text : "")).join("");
     return (
       <li className="flex justify-end">
-        <span className="sr-only">You: </span>
-        <p className="max-w-[85%] bg-e2e-panel-raised px-4 py-2.5 type-body whitespace-pre-wrap text-e2e-text-bright">
+        <span className="sr-only">you: </span>
+        <p className="max-w-[85%] bg-e2e-neutral-800 px-e2e-2 py-e2e-1 type-body-m whitespace-pre-wrap text-e2e-off-white">
           {text}
         </p>
       </li>
@@ -140,21 +137,16 @@ function Message({ message }: { message: ChatMessage }) {
   }
 
   return (
-    <li className="flex gap-3">
-      <Image
-        src="/e2e/logo-white.png"
-        alt=""
-        width={168}
-        height={168}
-        sizes="32px"
-        className="size-8 shrink-0 border border-e2e-hairline-strong bg-e2e-panel object-contain p-1"
-      />
-      <div className="flex min-w-0 flex-1 flex-col gap-2 pt-1">
-        <p className="type-label-xs text-e2e-text-faint">Assistant</p>
+    <li className="flex gap-e2e-2">
+      <span className="grid size-e2e-4 shrink-0 place-items-center border border-e2e-neutral-800 bg-e2e-neutral-800/40 text-e2e-off-white">
+        <Logo variant="sign" label="" className="h-e2e-2 w-auto" />
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col gap-e2e-1 pt-e2e-half">
+        <p className="type-caption text-e2e-neutral-500">assistant</p>
         {message.parts.map((part, index) => {
           if (part.type === "text" && part.text) {
             return (
-              <p key={index} className="type-body whitespace-pre-wrap text-e2e-text-soft">
+              <p key={index} className="type-body-m whitespace-pre-wrap text-e2e-off-white">
                 {part.text}
               </p>
             );

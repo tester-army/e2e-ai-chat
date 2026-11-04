@@ -12,8 +12,8 @@ describe("support chat", { tags: ["chat"], skip }, () => {
   test("answers a shipping question from the store's policy", async ({ app, screen, agent, browser }) => {
     await app.open("/");
     const response = browser.waitForResponse("**/api/chat");
-    await screen.getByLabel("Message").fill("Do I get free shipping on two T-shirts?");
-    await screen.getByRole("button", "Send").click();
+    await screen.getByLabel("message").fill("Do I get free shipping on two T-shirts?");
+    await screen.getByRole("button", "send").click();
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
     await agent.assert("the assistant's reply says an order of two T-shirts does not get free shipping");
@@ -27,11 +27,11 @@ describe("support chat", { tags: ["chat"], skip }, () => {
   test("looks up an order with the tool and shows it in a card", async ({ app, screen, agent, browser }) => {
     await app.open("/");
     const response = browser.waitForResponse("**/api/chat");
-    await screen.getByRole("button", "Where is order E2E-1002?").click();
+    await screen.getByRole("button", "where is order E2E-1002?").click();
 
     // The card shows the tool's result, which comes from a fixed list, so its text is exact.
-    const order = screen.getByRole("region", "Order E2E-1002");
-    await expect(order.getByTestId("order-status")).toHaveText("Shipped", { timeout: 30_000 });
+    const order = screen.getByRole("region", "order E2E-1002");
+    await expect(order.getByTestId("order-status")).toHaveText("shipped", { timeout: 30_000 });
     await expect(order.getByTestId("order-tracking")).toHaveText("1Z999AA10123456784");
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
@@ -46,30 +46,30 @@ describe("support chat", { tags: ["chat"], skip }, () => {
 
   test("declines a request that isn't about the store", async ({ app, screen, agent }) => {
     await app.open("/");
-    await screen.getByLabel("Message").fill("Write a short poem about the sea.");
-    await screen.getByRole("button", "Send").click();
+    await screen.getByLabel("message").fill("Write a short poem about the sea.");
+    await screen.getByRole("button", "send").click();
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
     await agent.assert("the assistant politely declines to write the poem and says what it can help with");
   });
 
-  test("recovers from a failed chat request with Retry", async ({ app, screen, agent, browser }) => {
+  test("recovers from a failed chat request with retry", async ({ app, screen, agent, browser }) => {
     let calls = 0;
     await browser.route("**/api/chat", (route) => {
       calls++;
       return route.fulfill({ status: 500, json: { error: "Model unavailable" } });
     });
     await app.open("/");
-    await screen.getByLabel("Message").fill("How long do I have to return a T-shirt?");
-    await screen.getByRole("button", "Send").click();
+    await screen.getByLabel("message").fill("How long do I have to return a T-shirt?");
+    await screen.getByRole("button", "send").click();
 
     // Next.js's route announcer is an alert too, so look inside the page's main.
     const chat = screen.getByRole("main");
-    await expect(chat.getByRole("alert")).toHaveText("Something went wrong. The assistant didn't answer.");
-    await expect(screen.getByLabel("Message")).toBeDisabled();
+    await expect(chat.getByRole("alert")).toHaveText("something went wrong. the assistant didn't answer.");
+    await expect(screen.getByLabel("message")).toBeDisabled();
 
     await browser.unroute("**/api/chat");
-    await chat.getByRole("button", "Retry").click();
+    await chat.getByRole("button", "retry").click();
 
     await agent.waitFor(REPLY_FINISHED, { timeout: 60_000 });
     await agent.assert("the assistant's reply says a T-shirt can be returned within 45 days");
